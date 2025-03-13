@@ -6,11 +6,11 @@
     <!-- Main content -->
     <div class="flex-1 h-dvh">
       <div class="p-6 h-dvh overflow-y-auto">
-        <h1 class="text-2xl font-bold mb-6">PQRS</h1>
+        <h1 class="text-2xl font-bold mb-6">Users</h1>
 
         <!-- Search Filter -->
         <div class="mb-6">
-          <input type="text" placeholder="Filter by title or email" v-model="searchQuery"
+          <input type="text" placeholder="Filter by name or email" v-model="searchQuery"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
@@ -39,9 +39,10 @@
                   <input type="checkbox" v-model="selected" :value="item.id" class="rounded">
                 </td>
                 <td class="px-4 py-3">{{ item.id }}</td>
-                <td class="px-4 py-3">{{ item.title }}</td>
+                <td class="px-4 py-3">{{ item.name }}</td>
                 <td class="px-4 py-3">{{ item.email }}</td>
                 <td class="px-4 py-3">{{ item.phone }}</td>
+                <td class="px-4 py-3">{{ item.isActive }}</td>
                 <td class="px-4 py-3 text-right relative">
                   <button @click="toggleDropdown(item.id)" class="p-1 hover:bg-gray-100 rounded">
                     ⋮
@@ -50,9 +51,13 @@
                     class="absolute -left-15 bg-white border border-gray-300 rounded shadow mt-2 z-10">
                     <ul class="p-3">
                       <li @click="editItem(item.id)"
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">View</li>
+                      <li @click="editItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
+                      <li @click="editItem(item.id)"
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Add pet</li>
                       <li @click="deleteItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Delete</li>
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Deactivate</li>
                     </ul>
                   </div>
                 </td>
@@ -96,37 +101,38 @@ const dropdownOpen = ref<number | null>(null)
 
 const headers = [
   { key: 'id', label: 'id' },
-  { key: 'title', label: 'title' },
+  { key: 'name', label: 'name' },
   { key: 'email', label: 'email' },
-  { key: 'phone', label: 'phone' }
+  { key: 'phone', label: 'phone' },
+  { key: 'isActive', label: 'is active' },
 ]
 
 const items = [
-  { id: 1, title: 'App not working', email: 'jhon@example.com', phone: '+57 3011234567' },
-  { id: 2, title: 'Cant create pet', email: 'dukke@example.com', phone: '+57 3006543214' },
-  { id: 3, title: 'Pet not appearing', email: 'andres@example.com', phone: '+57 3005678907' },
-  { id: 4, title: 'App not working', email: 'juan@example.com', phone: '+57 6015671234' },
-  { id: 5, title: 'App not working', email: 'carol@example.com', phone: '+57 6013456789' },
-  { id: 6, title: 'Cant login', email: 'maria@example.com', phone: '+57 3051230987' },
-  { id: 7, title: 'Return 404', email: 'homer@example.com', phone: '+57 3101230987' },
-  { id: 8, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567' },
-  { id: 9, title: 'App not working', email: 'jhon@example.com', phone: '+57 3011234567' },
-  { id: 10, title: 'Cant create pet', email: 'dukke@example.com', phone: '+57 3006543214' },
-  { id: 11, title: 'Pet not appearing', email: 'andres@example.com', phone: '+57 3005678907' },
-  { id: 12, title: 'App not working', email: 'juan@example.com', phone: '+57 6015671234' },
-  { id: 13, title: 'App not working', email: 'carol@example.com', phone: '+57 6013456789' },
-  { id: 14, title: 'Cant login', email: 'maria@example.com', phone: '+57 3051230987' },
-  { id: 15, title: 'Return 404', email: 'homer@example.com', phone: '+57 3101230987' },
-  { id: 16, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567' },
-  { id: 17, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567' },
-  { id: 18, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567' },
+  { id: 1, name: 'Jhon Doe', email: 'jhon@example.com', phone: '+57 3011234567', isActive: true },
+  { id: 2, name: 'Andres Duque', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true },
+  { id: 3, name: 'Homer Simpson', email: 'homer@example.com', phone: '+57 3005678907', isActive: false },
+  { id: 4, name: 'Timmy Turner', email: 'timmy@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 5, name: 'Diego Fonseca', email: 'diego@example.com', phone: '+57 6013456789', isActive: false },
+  { id: 6, name: 'Karol G', email: 'karol@example.com', phone: '+57 3051230987', isActive: true },
+  { id: 7, name: 'Juanito Alimaña', email: 'juanito@example.com', phone: '+57 3101230987', isActive: true },
+  { id: 8, name: 'Pablo Navajas', email: 'pablo@example.com', phone: '+57 6011234567', isActive: true },
+  { id: 9, name: 'Rick Sanchez', email: 'rick@example.com', phone: '+57 3011234567', isActive: true },
+  { id: 10, name: 'Morty Smith', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true },
+  { id: 11, name: 'Ssuke Uchija', email: 'sasuke@example.com', phone: '+57 3005678907', isActive: true },
+  { id: 12, name: 'Maria Carolina', email: 'maria@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 13, name: 'Miguel Angel', email: 'miguel@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 14, name: 'Lisa Simpson', email: 'lisa@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 15, name: 'Krusty el payaso', email: 'krusty@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 16, name: 'J Balvin', email: 'balvin@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 17, name: 'Pablo Gomez', email: 'pablo@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 18, name: 'Nino Nakano', email: 'nino@example.com', phone: '+57 6015671234', isActive: true },
 ]
 
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items
   const query = searchQuery.value.toLowerCase()
   return items.filter(item =>
-    item.title.toLowerCase().includes(query) ||
+    item.name.toLowerCase().includes(query) ||
     item.email.toLowerCase().includes(query)
   )
 })
