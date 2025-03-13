@@ -50,9 +50,9 @@
                     class="absolute -left-15 bg-white border border-gray-300 rounded shadow mt-2 z-10">
                     <ul class="p-3">
                       <li @click="editItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">View</li>
                       <li @click="deleteItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Delete</li>
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
                     </ul>
                   </div>
                 </td>

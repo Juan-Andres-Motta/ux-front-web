@@ -42,6 +42,7 @@
                 <td class="px-4 py-3">{{ item.title }}</td>
                 <td class="px-4 py-3">{{ item.email }}</td>
                 <td class="px-4 py-3">{{ item.phone }}</td>
+                <td class="px-4 py-3">{{ item.isActive }}</td>
                 <td class="px-4 py-3 text-right relative">
                   <button @click="toggleDropdown(item.id)" class="p-1 hover:bg-gray-100 rounded">
                     ⋮
@@ -51,8 +52,10 @@
                     <ul class="p-3">
                       <li @click="editItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
+                      <li @click="editItem(item.id)"
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Contact</li>
                       <li @click="deleteItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Delete</li>
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Deactivate</li>
                     </ul>
                   </div>
                 </td>
@@ -98,18 +101,19 @@ const headers = [
   { key: 'id', label: 'id' },
   { key: 'title', label: 'title' },
   { key: 'email', label: 'email' },
-  { key: 'phone', label: 'phone' }
+  { key: 'phone', label: 'phone' },
+  { key: 'isActive', label: 'is active' }
 ]
 
 const items = [
-  { id: 1, title: 'App not working', email: 'jhon@example.com', phone: '+57 3011234567' },
-  { id: 2, title: 'Cant create pet', email: 'dukke@example.com', phone: '+57 3006543214' },
-  { id: 3, title: 'Pet not appearing', email: 'andres@example.com', phone: '+57 3005678907' },
-  { id: 4, title: 'App not working', email: 'juan@example.com', phone: '+57 6015671234' },
-  { id: 5, title: 'App not working', email: 'carol@example.com', phone: '+57 6013456789' },
-  { id: 6, title: 'Cant login', email: 'maria@example.com', phone: '+57 3051230987' },
-  { id: 7, title: 'Return 404', email: 'homer@example.com', phone: '+57 3101230987' },
-  { id: 8, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567' }
+  { id: 1, title: 'App not working', email: 'jhon@example.com', phone: '+57 3011234567', isActive: true },
+  { id: 2, title: 'Cant create pet', email: 'dukke@example.com', phone: '+57 3006543214', isActive: false },
+  { id: 3, title: 'Pet not appearing', email: 'andres@example.com', phone: '+57 3005678907', isActive: true },
+  { id: 4, title: 'App not working', email: 'juan@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 5, title: 'App not working', email: 'carol@example.com', phone: '+57 6013456789', isActive: true },
+  { id: 6, title: 'Cant login', email: 'maria@example.com', phone: '+57 3051230987', isActive: true },
+  { id: 7, title: 'Return 404', email: 'homer@example.com', phone: '+57 3101230987', isActive: true },
+  { id: 8, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567', isActive: true }
 ]
 
 const filteredItems = computed(() => {
