@@ -87,14 +87,14 @@ import { ref, computed } from 'vue'
 import SidebarItem from '@/components/SidebarItem.vue'
 
 const searchQuery = ref('')
-const sortKey = ref('id')
+const sortKey = ref<keyof typeof items[0]>('id')
 const sortOrder = ref('asc')
-const selected = ref([])
+const selected = ref<number[]>([])
 const currentPage = ref(1)
 const itemsPerPage = 10
-const dropdownOpen = ref(null)
+const dropdownOpen = ref<number | null>(null)
 
-const headers = [
+const headers: { key: 'id' | 'title' | 'email' | 'phone', label: string }[] = [
   { key: 'id', label: 'id' },
   { key: 'title', label: 'title' },
   { key: 'email', label: 'email' },
@@ -123,8 +123,8 @@ const filteredItems = computed(() => {
 
 const sortedItems = computed(() => {
   const sorted = [...filteredItems.value].sort((a, b) => {
-    const aVal = a[sortKey.value]
-    const bVal = b[sortKey.value]
+    const aVal = a[sortKey.value as keyof typeof a]
+    const bVal = b[sortKey.value as keyof typeof b]
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
     if (aVal > bVal) return sortOrder.value === 'asc' ? 1 : -1
     return 0
@@ -143,7 +143,7 @@ const selectAll = computed({
   }
 })
 
-function sort(key) {
+function sort(key: keyof typeof items[0]) {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   } else {
@@ -160,7 +160,7 @@ function toggleAll() {
   }
 }
 
-function toggleDropdown(itemId) {
+function toggleDropdown(itemId: number) {
   if (dropdownOpen.value === itemId) {
     dropdownOpen.value = null // Close if it's already open
   } else {
@@ -168,13 +168,13 @@ function toggleDropdown(itemId) {
   }
 }
 
-function editItem(id) {
+function editItem(id: number) {
   // Handle editing the item
   console.log(`Editing item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
 }
 
-function deleteItem(id) {
+function deleteItem(id: number) {
   // Handle deleting the item
   console.log(`Deleting item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action

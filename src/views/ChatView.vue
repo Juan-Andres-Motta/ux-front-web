@@ -58,22 +58,30 @@
 import { ref } from 'vue'
 import SidebarItem from '@/components/SidebarItem.vue'
 
-const contacts = [
+interface Contact {
+  email: string
+}
+
+interface Message {
+  text: string
+}
+
+const contacts: Contact[] = [
   { email: 'jhon@example.com' },
   { email: 'dukke@example.com' },
   { email: 'timmy@example.com' },
   { email: 'homer@example.com' }
 ]
 
-const messages = ref([
+const messages = ref<Message[]>([
   { text: 'Hi there' },
   { text: 'The advantages of Artificial Intelligence' }
 ])
 
-const selectedContact = ref(contacts[0])
-const newMessage = ref('')
+const selectedContact = ref<Contact>(contacts[0])
+const newMessage = ref<string>('')
 
-function selectContact(contact) {
+function selectContact(contact: Contact) {
   selectedContact.value = contact
 }
 
@@ -86,7 +94,3 @@ function sendMessage() {
   }
 }
 </script>
-
-<style scoped>
-/* Add any component-specific styles here if needed */
-</style>

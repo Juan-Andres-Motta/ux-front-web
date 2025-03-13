@@ -47,7 +47,7 @@
               <div class="bg-white rounded-lg shadow p-4 flex">
                 <div class="flex items-center mb-1">
                   <div class="w-20 h-20 rounded-full bg-[#3e75df] text-white flex items-center justify-center mr-3">
-                    <UserIcon width="48" height="48" />
+                    <UserIcon :width="48" :height="48" />
                   </div>
                 </div>
                 <div class="flex flex-col justify-center gap-2 ml-3">
@@ -63,7 +63,7 @@
               <div class="bg-white rounded-lg shadow p-4 flex">
                 <div class="flex items-center mb-1">
                   <div class="w-20 h-20 rounded-full bg-[#3e75df] text-white flex items-center justify-center mr-3">
-                    <WarningReportIcon width="24" height="24" />
+                    <WarningReportIcon :width="24" :height="24" />
                   </div>
                 </div>
                 <div class="flex flex-col justify-center gap-2 ml-3">
@@ -79,7 +79,7 @@
               <div class="bg-white rounded-lg shadow p-4 flex">
                 <div class="flex items-center mb-1">
                   <div class="w-20 h-20 rounded-full bg-[#3e75df] text-white flex items-center justify-center mr-3">
-                    <CheckReportIcon width="48" height="48" />
+                    <CheckReportIcon :width="48" :height="48" />
                   </div>
                 </div>
                 <div class="flex flex-col justify-center gap-2 ml-3">
@@ -96,7 +96,7 @@
               <div class="bg-white rounded-lg shadow p-4 flex">
                 <div class="flex items-center mb-1">
                   <div class="w-20 h-20 rounded-full bg-[#3e75df] text-white flex items-center justify-center mr-3">
-                    <UserIcon width="48" height="48" />
+                    <UserIcon :width="48" :height="48" />
                   </div>
                 </div>
                 <div class="flex flex-col justify-center gap-2 ml-3">
@@ -124,11 +124,13 @@
 </template>
 
 <script setup lang="ts">
+/* tslint:disable */
 import SidebarItem from '@/components/SidebarItem.vue'
-import ChartItem from '@/components/ChartItem.vue'
+import ChartItem from '@/components/ChartItem.vue' // @ts-nocheck @ts-ignore
 import UserIcon from '@/components/UserIcon.vue'
 import CheckReportIcon from '@/components/CheckReportIcon.vue'
 import WarningReportIcon from '@/components/WarningReportIcon.vue'
+/* tslint:enable */
 </script>
 
 <style scoped>

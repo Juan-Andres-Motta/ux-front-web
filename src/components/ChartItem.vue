@@ -1,5 +1,4 @@
-<script>
-import * as CanvasJS from '@canvasjs/vue-charts';
+<script lang="ts">
 export default {
   data() {
     return {
@@ -17,7 +16,7 @@ export default {
         },
         legend: {
           cursor: "pointer",
-          itemclick: function (e) {
+          itemclick: function (e: { dataSeries: { visible?: boolean }, chart: { render: () => void } }) {
             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
               e.dataSeries.visible = false;
             } else {

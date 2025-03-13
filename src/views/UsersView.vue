@@ -89,10 +89,10 @@ import SidebarItem from '@/components/SidebarItem.vue'
 const searchQuery = ref('')
 const sortKey = ref('id')
 const sortOrder = ref('asc')
-const selected = ref([])
+const selected = ref<number[]>([])
 const currentPage = ref(1)
 const itemsPerPage = ref(16) // Change this value for more/less items per page
-const dropdownOpen = ref(null)
+const dropdownOpen = ref<number | null>(null)
 
 const headers = [
   { key: 'id', label: 'id' },
@@ -148,7 +148,7 @@ const selectAll = computed({
   }
 })
 
-function sort(key) {
+function sort(key: string) {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   } else {
@@ -165,7 +165,7 @@ function toggleAll() {
   }
 }
 
-function toggleDropdown(itemId) {
+function toggleDropdown(itemId: number) {
   if (dropdownOpen.value === itemId) {
     dropdownOpen.value = null // Close if it's already open
   } else {
@@ -173,13 +173,13 @@ function toggleDropdown(itemId) {
   }
 }
 
-function editItem(id) {
+function editItem(id: number) {
   // Handle editing the item
   console.log(`Editing item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
 }
 
-function deleteItem(id) {
+function deleteItem(id: number) {
   // Handle deleting the item
   console.log(`Deleting item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
@@ -206,7 +206,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown)
 })
 
-function handleKeydown(event) {
+function handleKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
     dropdownOpen.value = null; // Close the dropdown on Esc
   }
