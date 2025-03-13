@@ -71,7 +71,7 @@
           </div>
 
           <div class="text-right">
-            <button @click="editPet" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <button @click="editPet(pet.id)" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
               Edit pet
             </button>
           </div>
@@ -89,6 +89,10 @@ import { useModal } from '@/composables/useModal'
 
 const { closeModal, isModalOpen } = useModal('view-user');
 const router = useRouter();
+
+const {
+  openModal: openEditPetModal,
+} = useModal<Pet>('edit-pet');
 
 interface User {
   id: number;
@@ -124,13 +128,14 @@ const handleKeydown = (event: KeyboardEvent) => {
 };
 
 const createPet = () => {
-  router.push(`/users/${props.user.id}/pets/create`);
+  openEditPetModal();
   closeModal();
+
 };
 
-const editPet = () => {
-  router.push(`/users/${props.user.id}/pets/${props.user.pets[0].id}/edit`);
+const editPet = (id: number) => {
   closeModal();
+  openEditPetModal(props.user.pets.find(pet => pet.id === id));
 };
 
 onMounted(() => {

@@ -54,9 +54,9 @@
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">View</li>
                       <li @click="editItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
-                      <li @click="editItem(item.id)"
+                      <li @click="editPet()"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Add pet</li>
-                      <li @click="deleteItem(item.id)"
+                      <li @click="deleteItem()"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Deactivate</li>
                     </ul>
                   </div>
@@ -87,6 +87,9 @@
   </div>
   <UserDetailModal v-if="isViewUserModalOpen()" :user="getViewUserModalContext()" @close="closeViewUserModal" />
   <EditUserModal v-if="isEditUserModalOpen()" :user="getEditUserModalContext()" @close="closeEditUserModal" />
+  <AddPetModal v-if="isEditPetModalOpen()" :pet="getEditPetModalContext()" @close="closeEditPetModal" />
+  <DeactivateUserModal v-if="isDeactivateUserModalOpen()" :user="getDeactivateUserModalContext()"
+    @close="closeDeactivateUserModal" />
 </template>
 
 <script setup lang="ts">
@@ -95,8 +98,10 @@ import SidebarItem from '@/components/SidebarItem.vue'
 import { useModal } from '@/composables/useModal'
 import UserDetailModal from '@/components/UserDetailModal.vue';
 import EditUserModal from '@/components/EditUserModal.vue';
+import AddPetModal from '@/components/AddPetModal.vue';
+import DeactivateUserModal from '@/components/DeactivateUserModal.vue';
 
-import type { User } from '@/types/user';
+import type { User, Pet } from '@/types/user';
 
 const {
   isModalOpen: isViewUserModalOpen,
@@ -104,12 +109,27 @@ const {
   closeModal: closeViewUserModal,
   getContext: getViewUserModalContext
 } = useModal<User>('view-user');
+
 const {
   isModalOpen: isEditUserModalOpen,
   openModal: openEditUserModal,
   closeModal: closeEditUserModal,
   getContext: getEditUserModalContext
 } = useModal<User>('edit-user');
+
+const {
+  isModalOpen: isEditPetModalOpen,
+  openModal: openEditPetModal,
+  closeModal: closeEditPetModal,
+  getContext: getEditPetModalContext
+} = useModal<Pet>('edit-pet');
+
+const {
+  isModalOpen: isDeactivateUserModalOpen,
+  openModal: openDeactivateUserModal,
+  closeModal: closeDeactivateUserModal,
+  getContext: getDeactivateUserModalContext
+} = useModal<User>('deactivate-user');
 
 const searchQuery = ref('')
 const sortKey = ref('id')
@@ -215,9 +235,16 @@ function viewItem(id: number) {
   dropdownOpen.value = null; // Close dropdown after action
 }
 
-function deleteItem(id: number) {
+function deleteItem() {
   // Handle deleting the item
-  console.log(`Deleting item: ${id}`);
+  openDeactivateUserModal();
+  dropdownOpen.value = null; // Close dropdown after action
+}
+
+function editPet() {
+  // Handle editing the item
+  console.log(`Editing pet`);
+  openEditPetModal();
   dropdownOpen.value = null; // Close dropdown after action
 }
 
