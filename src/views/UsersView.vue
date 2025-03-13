@@ -50,7 +50,7 @@
                   <div v-if="dropdownOpen === item.id"
                     class="absolute -left-15 bg-white border border-gray-300 rounded shadow mt-2 z-10">
                     <ul class="p-3">
-                      <li @click="editItem(item.id)"
+                      <li @click="viewItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">View</li>
                       <li @click="editItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
@@ -85,11 +85,31 @@
       </div>
     </div>
   </div>
+  <UserDetailModal v-if="isViewUserModalOpen()" :user="getViewUserModalContext()" @close="closeViewUserModal" />
+  <EditUserModal v-if="isEditUserModalOpen()" :user="getEditUserModalContext()" @close="closeEditUserModal" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import SidebarItem from '@/components/SidebarItem.vue'
+import { useModal } from '@/composables/useModal'
+import UserDetailModal from '@/components/UserDetailModal.vue';
+import EditUserModal from '@/components/EditUserModal.vue';
+
+import type { User } from '@/types/user';
+
+const {
+  isModalOpen: isViewUserModalOpen,
+  openModal: openViewUserModal,
+  closeModal: closeViewUserModal,
+  getContext: getViewUserModalContext
+} = useModal<User>('view-user');
+const {
+  isModalOpen: isEditUserModalOpen,
+  openModal: openEditUserModal,
+  closeModal: closeEditUserModal,
+  getContext: getEditUserModalContext
+} = useModal<User>('edit-user');
 
 const searchQuery = ref('')
 const sortKey = ref('id')
@@ -108,24 +128,24 @@ const headers = [
 ]
 
 const items = [
-  { id: 1, name: 'Jhon Doe', email: 'jhon@example.com', phone: '+57 3011234567', isActive: true },
-  { id: 2, name: 'Andres Duque', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true },
-  { id: 3, name: 'Homer Simpson', email: 'homer@example.com', phone: '+57 3005678907', isActive: false },
-  { id: 4, name: 'Timmy Turner', email: 'timmy@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 5, name: 'Diego Fonseca', email: 'diego@example.com', phone: '+57 6013456789', isActive: false },
-  { id: 6, name: 'Karol G', email: 'karol@example.com', phone: '+57 3051230987', isActive: true },
-  { id: 7, name: 'Juanito Alimaña', email: 'juanito@example.com', phone: '+57 3101230987', isActive: true },
-  { id: 8, name: 'Pablo Navajas', email: 'pablo@example.com', phone: '+57 6011234567', isActive: true },
-  { id: 9, name: 'Rick Sanchez', email: 'rick@example.com', phone: '+57 3011234567', isActive: true },
-  { id: 10, name: 'Morty Smith', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true },
-  { id: 11, name: 'Ssuke Uchija', email: 'sasuke@example.com', phone: '+57 3005678907', isActive: true },
-  { id: 12, name: 'Maria Carolina', email: 'maria@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 13, name: 'Miguel Angel', email: 'miguel@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 14, name: 'Lisa Simpson', email: 'lisa@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 15, name: 'Krusty el payaso', email: 'krusty@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 16, name: 'J Balvin', email: 'balvin@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 17, name: 'Pablo Gomez', email: 'pablo@example.com', phone: '+57 6015671234', isActive: true },
-  { id: 18, name: 'Nino Nakano', email: 'nino@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 1, name: 'Jhon Doe', email: 'jhon@example.com', phone: '+57 3011234567', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }, { id: 2, name: 'Mishi', type: 'Cat', breed: 'Siames', age: 2 }] },
+  { id: 2, name: 'Andres Duque', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }, { id: 2, name: 'Mishi', type: 'Cat', breed: 'Siames', age: 2 }] },
+  { id: 3, name: 'Homer Simpson', email: 'homer@example.com', phone: '+57 3005678907', isActive: false, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }, { id: 2, name: 'Mishi', type: 'Cat', breed: 'Siames', age: 2 }] },
+  { id: 4, name: 'Timmy Turner', email: 'timmy@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }, { id: 2, name: 'Mishi', type: 'Cat', breed: 'Siames', age: 2 }] },
+  { id: 5, name: 'Diego Fonseca', email: 'diego@example.com', phone: '+57 6013456789', isActive: false, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }, { id: 2, name: 'Mishi', type: 'Cat', breed: 'Siames', age: 2 }] },
+  { id: 6, name: 'Karol G', email: 'karol@example.com', phone: '+57 3051230987', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 7, name: 'Juanito Alimaña', email: 'juanito@example.com', phone: '+57 3101230987', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 8, name: 'Pablo Navajas', email: 'pablo@example.com', phone: '+57 6011234567', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 9, name: 'Rick Sanchez', email: 'rick@example.com', phone: '+57 3011234567', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 10, name: 'Morty Smith', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 11, name: 'Ssuke Uchija', email: 'sasuke@example.com', phone: '+57 3005678907', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 12, name: 'Maria Carolina', email: 'maria@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 13, name: 'Miguel Angel', email: 'miguel@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 14, name: 'Lisa Simpson', email: 'lisa@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 15, name: 'Krusty el payaso', email: 'krusty@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 16, name: 'J Balvin', email: 'balvin@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 17, name: 'Pablo Gomez', email: 'pablo@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
+  { id: 18, name: 'Nino Nakano', email: 'nino@example.com', phone: '+57 6015671234', isActive: true, pets: [{ id: 1, name: 'Firulais', type: 'Dog', breed: 'Golden Retriever', age: 3 }] },
 ]
 
 const filteredItems = computed(() => {
@@ -182,6 +202,16 @@ function toggleDropdown(itemId: number) {
 function editItem(id: number) {
   // Handle editing the item
   console.log(`Editing item: ${id}`);
+  const userData = items.find(item => item.id === id);
+  openEditUserModal(userData);
+  dropdownOpen.value = null; // Close dropdown after action
+}
+
+function viewItem(id: number) {
+  // Handle editing the item
+  console.log(`Editing item: ${id}`);
+  const userData = items.find(item => item.id === id);
+  openViewUserModal(userData);
   dropdownOpen.value = null; // Close dropdown after action
 }
 
