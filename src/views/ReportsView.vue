@@ -6,7 +6,7 @@
     <!-- Main content -->
     <div class="flex-1 overflow-auto">
       <div class="p-6">
-        <h1 class="text-2xl font-bold mb-6">PQRS</h1>
+        <h1 class="text-2xl font-bold mb-6">Reports</h1>
 
         <!-- Search Filter -->
         <div class="mb-6">

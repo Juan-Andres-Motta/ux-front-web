@@ -20,7 +20,7 @@
       <!-- Chat Area -->
       <div class="flex-1 flex flex-col">
         <div class="p-6">
-          <h1 class="text-2xl font-bold mb-6">Contacts</h1>
+          <h1 class="text-2xl font-bold mb-6">Chats</h1>
         </div>
 
         <!-- Messages -->

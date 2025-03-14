@@ -20,8 +20,6 @@
         Sign In
       </RouterLink>
 
-      <div class="mb-8">Error</div>
-
       <div class="flex gap-4 w-full">
         <RouterLink
           class="flex-1 flex items-center justify-center gap-2 py-2 px-3 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors"
