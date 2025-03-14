@@ -50,12 +50,10 @@
                   <div v-if="dropdownOpen === item.id"
                     class="absolute -left-15 bg-white border border-gray-300 rounded shadow mt-2 z-10">
                     <ul class="p-3">
-                      <li @click="editItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
-                      <li @click="editItem(item.id)"
+                      <li @click="viewItem(item.id)"
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">View</li>
+                      <li @click="contactItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Contact</li>
-                      <li @click="deleteItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Deactivate</li>
                     </ul>
                   </div>
                 </td>
@@ -83,11 +81,18 @@
       </div>
     </div>
   </div>
+  <ReportDetailModal v-if="isViewReportModalOpen()" :report="getViewReportModalContext()"
+    @close="closeViewReportModal" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import SidebarItem from '@/components/SidebarItem.vue'
+import { useModal } from '@/composables/useModal'
+import ReportDetailModal from '@/components/ReportDetailModal.vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const searchQuery = ref('')
 const sortKey = ref('id')
@@ -96,6 +101,21 @@ const selected = ref<number[]>([])
 const currentPage = ref(1)
 const itemsPerPage = 10
 const dropdownOpen = ref<number | null>(null)
+
+interface Report {
+  id: number;
+  title: string;
+  email: string;
+  phone: string;
+  isActive: boolean;
+}
+
+const {
+  isModalOpen: isViewReportModalOpen,
+  openModal: openViewReportModal,
+  closeModal: closeViewReportModal,
+  getContext: getViewReportModalContext
+} = useModal<Report>('view-report');
 
 const headers = [
   { key: 'id', label: 'id' },
@@ -172,16 +192,18 @@ function toggleDropdown(itemId: number) {
   }
 }
 
-function editItem(id: number) {
+function viewItem(id: number) {
   // Handle editing the item
   console.log(`Editing item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
+  openViewReportModal(items.find(item => item.id === id));
 }
 
-function deleteItem(id: number) {
+function contactItem(id: number) {
   // Handle deleting the item
   console.log(`Deleting item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
+  router.push(`/chat`);
 }
 
 function previousPage() {

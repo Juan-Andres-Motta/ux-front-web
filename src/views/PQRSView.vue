@@ -49,10 +49,10 @@
                   <div v-if="dropdownOpen === item.id"
                     class="absolute -left-15 bg-white border border-gray-300 rounded shadow mt-2 z-10">
                     <ul class="p-3">
-                      <li @click="editItem(item.id)"
+                      <li @click="viewItem(item.id)"
                         class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">View</li>
-                      <li @click="deleteItem(item.id)"
-                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Edit</li>
+                      <li @click="contactItem(item.id)"
+                        class="hover:bg-gray-100 hover:rounded-md cursor-pointer px-4 mb-1 text-left">Contact</li>
                     </ul>
                   </div>
                 </td>
@@ -80,11 +80,17 @@
       </div>
     </div>
   </div>
+  <PQRSDetailModal v-if="isViewReportModalOpen()" :report="getViewReportModalContext()" @close="closeViewReportModal" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import SidebarItem from '@/components/SidebarItem.vue'
+import PQRSDetailModal from '@/components/PQRSDetailModal.vue'
+import { useRouter } from 'vue-router';
+import { useModal } from '@/composables/useModal'
+
+const router = useRouter();
 
 const searchQuery = ref('')
 const sortKey = ref<keyof typeof items[0]>('id')
@@ -102,15 +108,30 @@ const headers: { key: 'id' | 'title' | 'email' | 'phone', label: string }[] = [
 ]
 
 const items = [
-  { id: 1, title: 'App not working', email: 'jhon@example.com', phone: '+57 3011234567' },
-  { id: 2, title: 'Cant create pet', email: 'dukke@example.com', phone: '+57 3006543214' },
-  { id: 3, title: 'Pet not appearing', email: 'andres@example.com', phone: '+57 3005678907' },
-  { id: 4, title: 'App not working', email: 'juan@example.com', phone: '+57 6015671234' },
-  { id: 5, title: 'App not working', email: 'carol@example.com', phone: '+57 6013456789' },
-  { id: 6, title: 'Cant login', email: 'maria@example.com', phone: '+57 3051230987' },
-  { id: 7, title: 'Return 404', email: 'homer@example.com', phone: '+57 3101230987' },
-  { id: 8, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567' }
+  { id: 1, title: 'App not working', email: 'jhon@example.com', phone: '+57 3011234567', isActive: true },
+  { id: 2, title: 'Cant create pet', email: 'dukke@example.com', phone: '+57 3006543214', isActive: true },
+  { id: 3, title: 'Pet not appearing', email: 'andres@example.com', phone: '+57 3005678907', isActive: false },
+  { id: 4, title: 'App not working', email: 'juan@example.com', phone: '+57 6015671234', isActive: true },
+  { id: 5, title: 'App not working', email: 'carol@example.com', phone: '+57 6013456789', isActive: false },
+  { id: 6, title: 'Cant login', email: 'maria@example.com', phone: '+57 3051230987', isActive: true },
+  { id: 7, title: 'Return 404', email: 'homer@example.com', phone: '+57 3101230987', isActive: true },
+  { id: 8, title: 'App not working', email: 'rick@example.com', phone: '+57 6011234567', isActive: false }
 ]
+
+interface Report {
+  id: number;
+  title: string;
+  email: string;
+  phone: string;
+  isActive: boolean;
+}
+
+const {
+  isModalOpen: isViewReportModalOpen,
+  openModal: openViewReportModal,
+  closeModal: closeViewReportModal,
+  getContext: getViewReportModalContext
+} = useModal<Report>('view-pqrs');
 
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items
@@ -168,17 +189,20 @@ function toggleDropdown(itemId: number) {
   }
 }
 
-function editItem(id: number) {
+function viewItem(id: number) {
   // Handle editing the item
   console.log(`Editing item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
+  openViewReportModal(items.find(item => item.id === id));
 }
 
-function deleteItem(id: number) {
+function contactItem(id: number) {
   // Handle deleting the item
   console.log(`Deleting item: ${id}`);
   dropdownOpen.value = null; // Close dropdown after action
+  router.push(`/chat`);
 }
+
 
 function previousPage() {
   if (currentPage.value > 1) {
